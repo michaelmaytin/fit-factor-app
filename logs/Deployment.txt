@@ -1,0 +1,24 @@
+Containerized staging environment (Docker Compose with Flask and MySQL
+
+AWS or Azure
+    both have similar options
+
+
+    put WAF in front of app (for azure, not sure about aws)
+    set up virtual network and subnets to lock down the access (in azure/aws)
+    Azure WAF would be public entrance to the app
+    use Azure MySQL to host DB?
+        within same VNet (and maybe same subnet or diff subnet with communication to apps subnet))
+        backend would need to use Azure keyvault to store connection string for DB comms
+
+    can use azure web apps to host app in azure (look up AppService - web app for containers on azure)
+
+
+    should get free credit on azure as a student
+
+Further research: look into managed identires vs service principles
+Chat GPT can most likely help set up VNet, subnet, WAF, etc.
+
+
+
+

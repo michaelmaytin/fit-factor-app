@@ -1,5 +1,85 @@
 security.txt
-this document will be used to keep track of security decisions, plans, and execution
+this document will be used to keep track of security decisions, plans, and considerations
+
+___________________________________________________________________________________
+AGENDA______________________________________________________________________________
+    - implement
+        password_handler.py
+        authentication_service.py
+        authentication_routes.py
+        rbac.py
+
+
+    - add to security checklist below
+
+_________________________________________________________________________________________
+FILE BREAKDOWN___________________________________________________________________________________
+...Security/password_handler.py:
+        Purpose:
+            Password hash and handling logic
+        Details:
+            Hash user passwords before storing them in the database, using a salt and hash algorithm.
+            It also verifies user passwords during login by comparing the entered password with the stored hash.
+            No other file should directly handle passwords.
+
+...Security/authentication_service.py:
+        Purpose:
+            Authentication/log logic, verify identity, and manage user sessions.
+        Details:
+            This file receives user login requests and handles them
+            It can also handle new user registration
+            Uses password_service.py to verify the provided password.
+            Upon successful authentication, it establishes a server-side session.
+
+...Security/authentication_routes.py
+        Purpose:
+            Define network/web routes related to authentication.
+        Details:
+            Contains URL routes like /login, /logout, /register that users interact with.
+            These routes call functions from authentication_service.py to handle the actual authentication logic.
+                example: /login route calls function in authentication_service.py to verify and statr the session
+
+...Security/rbac.py:
+        Purpose:
+            Define role based access control model.
+        Details:
+            Defines roles such as [admin, user, editor]
+                Defines each role's permissions
+                    Create rules
+
+...Security/authorization_service.py:
+        Purpose:
+            Enforce authorization decisions.
+        Details:
+            Takes authenticated user identity and requested action as input.
+            Consults rbac.py to determine if user has permission to perform action.
+
+
+
+___________________________________________________________________________________
+PLANS AND NOTES____________________________________________________________________
+
+security checklist:
+        threat model diagram using free tool
+        check for vulnerabilities
+        final app review
+        deployment security check
+        tbd
+        tbd
+
+
+
+
 ____________________________________________________________________________________
+CONSIDERATIONS______________________________________________________________________
 
 
+    Other security vulnerabilities and additions to consider throughout project
+        thorough input validation
+        secure configuration management
+        Secure communication
+            through HTTPS by obtaining SSL/TLS certificate
+        Detailed/internalized error handling (minimize sensitive data leaks)
+        security audits and vulnerability scans
+            can be done with tools
+        data encryption for user personal data (not just limited to pw)
