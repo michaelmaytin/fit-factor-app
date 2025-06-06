@@ -1,3 +1,10 @@
-#log in logic
+#### password_service.py ####
 
-#session management
+#this file implements the following:
+  # log in logic
+  # session management
+  #
+#########################################
+
+
+
