@@ -1,4 +1,4 @@
-#### password_service.py ####
+#### password_handler.py ####
 
 #this file implements the following:
   # hashing algorithm for password encryption
