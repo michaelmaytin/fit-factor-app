@@ -1,9 +1,10 @@
 #### password_service.py ####
 
 #this file implements the following:
-  # hashing for password encryption
+  # hashing algorithm for password encryption
+        #bcrypt or scrypt
+        #add salt (salt n hash) to prevent vulnerabilities
   # password verification
-  #
 #########################################
 
 
