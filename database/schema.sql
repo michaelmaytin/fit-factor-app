@@ -1,7 +1,13 @@
+-- This is a basic MySQL schema for out project
+-- This is just a basic framework for the db
+-- This is subject to change
+
+-- This Deletes the previous database and creates a new one with the same/updated syntax
 DROP DATABASE fit_factor;
 CREATE DATABASE fit_factor;
 USE fit_factor;
 
+--Users table
 CREATE TABLE Users (
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
@@ -14,6 +20,7 @@ CREATE TABLE Users (
     goal VARCHAR(100)
 );	
 
+--Exercises table
 CREATE TABLE Exercises (
 	exercise_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -21,6 +28,7 @@ CREATE TABLE Exercises (
     equipment_needed VARCHAR(100)
 );
 
+--Workouts table
 CREATE TABLE Workouts (
 	workout_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -30,6 +38,7 @@ CREATE TABLE Workouts (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+--Workout and Exercises relational table
 CREATE TABLE Workout_to_Exercises (
 	workout_id INT NOT NULL,
     exercise_id INT NOT NULL,
@@ -41,6 +50,7 @@ CREATE TABLE Workout_to_Exercises (
     FOREIGN KEY (exercise_id) REFERENCES Exercises(exercise_id)
 );
 
+--Nutrition table
 CREATE TABLE Nutrition (
 	meal_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -53,6 +63,7 @@ CREATE TABLE Nutrition (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+--Foods table
 CREATE TABLE Foods (
 	food_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -62,6 +73,7 @@ CREATE TABLE Foods (
     carbs_g FLOAT
 );
 
+-- Progress Table
 CREATE TABLE Progress (
 	progress_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
