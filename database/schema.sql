@@ -7,7 +7,12 @@ DROP DATABASE fit_factor;
 CREATE DATABASE fit_factor;
 USE fit_factor;
 
---Users table
+-- Create Roles table for flexibiltiy
+CREATE TABLE Roles (
+	role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL
+);
+-- Users table
 CREATE TABLE Users (
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
@@ -17,10 +22,12 @@ CREATE TABLE Users (
     gender VARCHAR(10),
     height_ft FLOAT,
     weight_lbs FLOAT,
-    goal VARCHAR(100)
+    goal VARCHAR(100),
+    role_id INT,
+    FOREIGN KEY (role_id) REFERENCES Roles(role_id) ON DELETE SET NULL
 );	
 
---Exercises table
+-- Exercises table
 CREATE TABLE Exercises (
 	exercise_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -28,17 +35,17 @@ CREATE TABLE Exercises (
     equipment_needed VARCHAR(100)
 );
 
---Workouts table
+-- Workouts table
 CREATE TABLE Workouts (
 	workout_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     workout_date DATE NOT NULL,
     duration_minutes INT,
     workout_type VARCHAR(50),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)  ON DELETE CASCADE
 );
 
---Workout and Exercises relational table
+-- Workout and Exercises relational table
 CREATE TABLE Workout_to_Exercises (
 	workout_id INT NOT NULL,
     exercise_id INT NOT NULL,
@@ -50,7 +57,7 @@ CREATE TABLE Workout_to_Exercises (
     FOREIGN KEY (exercise_id) REFERENCES Exercises(exercise_id)
 );
 
---Nutrition table
+-- Nutrition table
 CREATE TABLE Nutrition (
 	meal_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -63,7 +70,7 @@ CREATE TABLE Nutrition (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
---Foods table
+-- Foods table
 CREATE TABLE Foods (
 	food_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
