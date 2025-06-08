@@ -1,11 +1,11 @@
 06-08>  Michael Maytin:
-					Created empty frontend folder
-					Downloaded node.js with the assumtion we are going to use react
-					Created and empty page folder
-					Added basic header for visualization purposes 
+			Created empty frontend folder
+			Downloaded node.js with the assumtion we are going to use react
+			Created and empty page folder
+			Added basic header for visualization purposes 
 06-09> 
 
 
 
 The web framework used will be Flask
-front end react or javascript? <-- Michael here: I vote react!
+front end react or javascript? <-- Michael here: I vote react! 
