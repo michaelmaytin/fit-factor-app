@@ -1,7 +1,4 @@
 06-08>  Michael Maytin
-          Created a empty folder for the front-end
-          Setup react for the front end (We can discuss changes to this later)
-          Initialize empty pages folder for the time being
 
 
 
