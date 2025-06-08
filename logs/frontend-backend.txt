@@ -2,7 +2,7 @@
 					Created empty frontend folder
 					Downloaded node.js with the assumtion we are going to use react
 					Created and empty page folder
-					Added basic header for visualization purposes
+					Added basic header for visualization purposes 
 06-09> 
 
 
