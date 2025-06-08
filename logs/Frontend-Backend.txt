@@ -1,7 +1,0 @@
-06-08>  Michael Maytin
-
-
-
-The web framework used will be Flask
-
-front end react or javascript?
