@@ -1,8 +1,0 @@
-
-
-
-
-
-
-
-#Data will be stored in using a MySQL serve
