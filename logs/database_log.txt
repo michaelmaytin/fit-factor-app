@@ -1,8 +1,0 @@
-06-08>  Michael Maytin: 
-		Wrote Database schema into schema.sql
-		Commented basic functionalities of each table
-		Restructured Schema to have a Role Teble
-		Translated the schema onto the models.py file using SQLAlchemy
-		Schema and Models.py are matched
-		Will continue work another time...
-06-09>
