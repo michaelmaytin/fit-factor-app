@@ -4,11 +4,30 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log('Logging in with: ', email, password);
-    // Later call your Flask API to verify credentials
-  };
+const handleLogin = async (e) => {
+  e.preventDefault();
+  console.log("Sending login request", email, password);
+  try {
+    const response = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert(data.message);  // "Login successful"
+    } else {
+      alert(data.message);  // "Invalid credentials"
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Something went wrong');
+  }
+};
+
 
   return (
     <div style={{ maxWidth: '400px', margin: 'auto', paddingTop: '100px' }}>

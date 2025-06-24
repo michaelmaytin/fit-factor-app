@@ -7,6 +7,7 @@ CORS(app) # Allow request from React frontend
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
+    print("Received data:", data)
     email = data.get('email')
     password = data.get('password')
 
