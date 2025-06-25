@@ -18,7 +18,8 @@ const handleLogin = async (e) => {
 
     const data = await response.json();
     if (response.ok) {
-      alert(data.message);  // "Login successful"
+      localStorage.setItem("user", JSON.stringify({ email })); // Save login info
+      alert(data.message); // Login successful
     } else {
       alert(data.message);  // "Invalid credentials"
     }
