@@ -18,8 +18,12 @@ const handleLogin = async (e) => {
 
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem("user", JSON.stringify({ email })); // Save login info
+      localStorage.setItem("user", JSON.stringify({
+      email: data.email,
+      role: data.role
+      }));
       alert(data.message); // Login successful
+      window.location.href = "/dashboard"; // Redirect Usser
     } else {
       alert(data.message);  // "Invalid credentials"
     }

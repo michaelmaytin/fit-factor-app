@@ -4,7 +4,16 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app) # Allow request from React frontend
 
-users = set()
+users = {
+    "test@example.com": {
+        "password": "123456",
+        "role": "admin"
+    },
+    "user@example.com": {
+        "password": "password",
+        "role": "user"
+    }
+}
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -13,9 +22,13 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    # Dummy login logic
-    if email == "test@example.com" and password == "123456":
-        return jsonify({"message": "Login successful"}), 200
+    user = users.get(email)
+    if user and user['password'] == password:
+        return jsonify({
+            "message": "Login successful",
+            "email": email,
+            "role": user['role']
+        }), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
 
@@ -29,7 +42,11 @@ def signup():
     if email in users:
         return jsonify({"message": "User already exists"}), 409
 
-    users.add(email)
+    users[email] = {
+        "password": password,
+        "role": "user"
+    }
+
     print("Current users:", users)
     return jsonify({"message": "Signup successful"}), 201
 
