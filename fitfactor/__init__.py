@@ -9,12 +9,12 @@ def create_app():
     def ping():
         return "pong", 200
 
-    # ── Config ──
+    # configuration
     app.config['SECRET_KEY'] = 'supersecretkey'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fitfactor.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # ── Init extensions ──
+    # init extentions
     db.init_app(app)
     login_manager.init_app(app)
 
