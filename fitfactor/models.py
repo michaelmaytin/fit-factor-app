@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 db = SQLAlchemy()
 
@@ -8,6 +10,9 @@ class Role(db.Model):
     role_id = db.Column(db.Integer, primary_key=True)
     role_name = db.Column(db.String(50), unique=True, nullable=False)
 
+    def __repr__(self):
+        return f"<Role {self.role_name}>"
+
 
 # User Table
 class User(db.Model):
@@ -15,7 +20,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     age = db.Column(db.Integer)
     gender = db.Column(db.String(10))
     height_ft = db.Column(db.Float)
@@ -30,6 +35,18 @@ class User(db.Model):
     workouts = db.relationship('Workout', backref='user', cascade='all, delete')
     meals = db.relationship('Meal', backref='user', cascade='all, delete')
     progress_logs = db.relationship('Progress', backref='user', cascade='all, delete')
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def has_role(self, role_name):
+        return self.role and self.role.role_name == role_name
+
+    def __repr__(self):
+        return f"<User {self.username}>"
 
 
 # Exercise Table
