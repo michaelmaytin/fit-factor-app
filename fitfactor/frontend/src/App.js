@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminPage from "./pages/AdminPage";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
     return (
@@ -16,6 +18,13 @@ function App() {
                         <Dashboard />
                     </ProtectedRoute>
                 }/>
+                <Route
+                    path="/admin"
+                    element={
+                        <AdminRoute>
+                            <AdminPage />
+                        </AdminRoute>
+                    } />
           </Routes>
       </Router>
       );
