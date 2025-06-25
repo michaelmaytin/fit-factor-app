@@ -1,13 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+from .extensions import db
 
 # Roles Table for the RBAC
 class Role(db.Model):
     __tablename__ = 'Role'
     role_id = db.Column(db.Integer, primary_key=True)
     role_name = db.Column(db.String(50), unique=True, nullable=False)
-
+    #for verfication
+    def __repr__(self):
+        return f"<Role {self.role_name!r}>"
 
 # User Table
 class User(db.Model):
@@ -24,7 +26,7 @@ class User(db.Model):
 
     #Links User to Roles
     role_id = db.Column(db.Integer, db.ForeignKey('Role.role_id', ondelete="SET NULL"))
-    role = db.relationship('Role', backref='user')
+    role = db.relationship('Role', backref='users')
 
     #Links User to One-to-Many relationship with the following tables:
     workouts = db.relationship('Workout', backref='user', cascade='all, delete')
@@ -43,7 +45,9 @@ class Exercise(db.Model):
 
     # Link to Workout
     workouts = db.relationship('Workout_To_Exercise', backref='exercise', cascade='all, delete')
-
+    #for verification
+    def __repr__(self):
+        return f"<Exercise {self.name!r}>"
 # Workout Table
 class Workout(db.Model):
     __tablename__ = 'Workout'
@@ -57,7 +61,9 @@ class Workout(db.Model):
 
     #Exercise Relationship
     exercises = db.relationship('Workout_To_Exercise', backref='workout', cascade='all, delete')
-
+    #for verifcation
+    def __repr__(self):
+        return f"<Workout {self.workout_id} on {self.date}>"
 
 #(Many-to-Many Relationship) Workout and Exercise
 class Workout_To_Exercise(db.Model):
@@ -80,7 +86,8 @@ class Meal(db.Model):
     carbs_g = db.Column(db.Float)
     fats_g = db.Column(db.Float)
     notes = db.Column(db.Text)
-
+    def __repr__(self):
+        return f"<Meal {self.meal_id} for User {self.user_id}>"
 
 # Foods Table
 class Food(db.Model):
@@ -91,7 +98,8 @@ class Food(db.Model):
     protein_g = db.Column(db.Float)
     carbs_g = db.Column(db.Float)
     fats_g = db.Column(db.Float)
-
+    def __repr__(self):
+        return f"<Food {self.name!r}>"
 
 #Progress Table
 class Progress(db.Model):
@@ -102,3 +110,5 @@ class Progress(db.Model):
     weight_lbs = db.Column(db.Float)
     body_fat_percentage = db.Column(db.Float)
     notes = db.Column(db.Text)
+    def __repr__(self):
+        return f"<Progress {self.entry_date} for User {self.user_id}>"
