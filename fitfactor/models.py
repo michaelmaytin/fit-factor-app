@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-
 from .extensions import db
+from sqlalchemy import event, insert
 
 # Roles Table for the RBAC
 class Role(db.Model):
@@ -112,3 +112,15 @@ class Progress(db.Model):
     notes = db.Column(db.Text)
     def __repr__(self):
         return f"<Progress {self.entry_date} for User {self.user_id}>"
+
+#this initializes roles upon startup
+@event.listens_for(Role.__table__, "after_create")
+def insert_default_roles(target, connection, **kw):
+    connection.execute(
+        insert(Role.__table__),
+        [
+            {"role_name": "User"},
+            {"role_name": "Trainer"},
+            {"role_name": "Admin"},
+        ]
+    )
