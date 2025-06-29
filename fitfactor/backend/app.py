@@ -1,33 +1,31 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from extensions import db
+from models import User, Role
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-CORS(app) # Allow request from React frontend
 
-users = {
-    "test@example.com": {
-        "password": "123456",
-        "role": "admin"
-    },
-    "user@example.com": {
-        "password": "password",
-        "role": "user"
-    }
-}
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Shamcat!1234@localhost/fit_factor'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+
+CORS(app)
 
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print("Received data:", data)
     email = data.get('email')
     password = data.get('password')
 
-    user = users.get(email)
-    if user and user['password'] == password:
+    user = User.query.filter_by(email=email).first()
+
+    if user and check_password_hash(user.password, password):
         return jsonify({
             "message": "Login successful",
-            "email": email,
-            "role": user['role']
+            "email": user.email,
+            "role": user.role.role_name
         }), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
@@ -37,17 +35,26 @@ def signup():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    print("Signup received:", data)
 
-    if email in users:
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
         return jsonify({"message": "User already exists"}), 409
 
-    users[email] = {
-        "password": password,
-        "role": "user"
-    }
+    default_role = Role.query.filter_by(role_name="user").first()
+    if not default_role:
+        default_role = Role(role_name="user")
+        db.session.add(default_role)
+        db.session.commit()
 
-    print("Current users:", users)
+    new_user = User(
+        username=email.split('@')[0],
+        email=email,
+        password=generate_password_hash(password),
+        role_id=default_role.role_id
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
     return jsonify({"message": "Signup successful"}), 201
 
 @app.route('/ping')
