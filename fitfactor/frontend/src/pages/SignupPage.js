@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -10,7 +11,7 @@ function SignupPage() {
       const response = await fetch('http://localhost:5000/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, role })
       });
 
       const data = await response.json();
@@ -46,6 +47,14 @@ function SignupPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
+        <div style={{marginBottom:"10px"}}>
+          <label>Role:</label><br />
+          <select value={role} onChange={(e) => setRole(e.target.value)} required>
+            <option value="">Select Role</option>
+            <option value="user">User</option>
+            <option value="trainer">Trainer</option>
+          </select>
         </div>
         <button type="submit">Sign Up</button>
       </form>

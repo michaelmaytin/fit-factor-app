@@ -35,22 +35,24 @@ def signup():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
+    role_name = data.get('role')
+
+    if not role_name:
+        return jsonify({"message": "Role is required"}), 401
 
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
         return jsonify({"message": "User already exists"}), 409
 
-    default_role = Role.query.filter_by(role_name="user").first()
-    if not default_role:
-        default_role = Role(role_name="user")
-        db.session.add(default_role)
-        db.session.commit()
+    selected_role = Role.query.filter_by(role_name=role_name).first()
+    if not selected_role:
+        return jsonify({"message": "Invalid role selected"}), 400
 
     new_user = User(
         username=email.split('@')[0],
         email=email,
         password=generate_password_hash(password),
-        role_id=default_role.role_id
+        role_id=selected_role.role_id
     )
     db.session.add(new_user)
     db.session.commit()
