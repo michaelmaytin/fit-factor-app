@@ -38,3 +38,12 @@ Choose one of these approaches to get your local database up and running:
         flask db upgrade
     5.Start server
         flask run
+
+
+### Making schema changes
+
+1. Edit `fitfactor/models.py` (add columns, tables, etc.).
+2. Run  
+   ```bash
+   flask db migrate -m "change you made"
+   flask db upgrade

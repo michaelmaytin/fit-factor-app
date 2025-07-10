@@ -64,6 +64,14 @@ class Workout(db.Model):
     #for verifcation
     def __repr__(self):
         return f"<Workout {self.workout_id} on {self.date}>"
+    def serialize(self):
+        return {
+            "id": self.workout_id,
+            "date": self.date.isoformat(),
+            "duration_mins": self.duration_mins,
+            "type": self.type,
+            "user_id": self.user_id
+        }
 
 #(Many-to-Many Relationship) Workout and Exercise
 class Workout_To_Exercise(db.Model):
