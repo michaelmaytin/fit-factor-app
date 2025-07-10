@@ -1,6 +1,6 @@
-// Placeholder for now
 import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
+import './Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -9,42 +9,42 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Login attempted with:', { email, password });
-    //  send a request to server
+    // send a request to server
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center mt-5">
-        <Col xs={12} md={6}>
-          <h2 className="text-center mb-4">Login</h2>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
+    <div className="login-wrapper">
+      <div className="login-form-container">
+        <h2 className="login-title">Login</h2>
+        <Form className="login-form" onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100">
-              Login
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+          <Button variant="primary" type="submit" className="login-button">
+            Login
+          </Button>
+        </Form>
+      </div>
+    </div>
   );
 }
 
