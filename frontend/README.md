@@ -1,5 +1,36 @@
-# Getting Started with Create React App
+# FitFactor Frontend Setup
 
+## 0. Prerequisite
+ensure you have Node.js installed
+download the LTS version
+navigate to frontend directory to run the following commands 
+
+
+run frontend connecting to Flask backend
+## 1. Install dependencies
+npm install
+
+## 2. Create .env file
+in frontend/ directory create local file called .env (will not push due to .gitignore)
+.env configuration:
+   REACT_APP_API_URL=http://localhost:5000/api
+
+## 3. Run the Frontend
+npm start
+ starts the React app on http://localhost:3000  
+ automatically proxies API requests to Flask backend running on port 5000.
+
+
+
+
+
+
+___________________________________________________________________
+
+
+
+
+# Getting Started with Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

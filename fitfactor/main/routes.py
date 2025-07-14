@@ -1,6 +1,6 @@
 # fitfactor/main/routes.py
 
-from flask import Blueprint, request, jsonify, abort, make_response
+from flask import Blueprint, request, jsonify
 from fitfactor.extensions import db
 from fitfactor.models import Role, Workout
 
