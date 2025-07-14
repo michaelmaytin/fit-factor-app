@@ -1,7 +1,0 @@
-
-
-
-
-The web framework used will be Flask
-
-front end react or javascript?
