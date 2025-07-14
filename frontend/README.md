@@ -20,8 +20,9 @@ npm start
  starts the React app on http://localhost:3000  
  automatically proxies API requests to Flask backend running on port 5000.
 
-
-
+## 4. Building and Testing
+npm run build
+npm test
 
 
 
