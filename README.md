@@ -15,10 +15,11 @@ Before setting up the project, make sure you have:
 
 ## Getting Started
 Make sure you have the requirments
-- pip install -r requirments.txt
+    pip install -r requirments.txt
 
-if you make changes to  requirements.txt
-  - run pipfreeze > requirements.lock
+once you ensure that your current environment works after setup, run:
+    pipfreeze > requirements.lock
+also use that if you make changes to  requirements.txt
 
 
 ### For Backend
