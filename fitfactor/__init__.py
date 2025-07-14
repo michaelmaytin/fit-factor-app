@@ -8,10 +8,12 @@ from flask import Flask
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASE_DIR, '..', '.env'))
 
-from .config import Config
-from .extensions import db, migrate
-from .main.routes import api as api_bp
-from .main import bp as main_bp  #main Blueprint
+from fitfactor.config import Config
+from fitfactor.extensions import db, migrate
+from fitfactor.main.routes import api as api_bp
+from fitfactor.main import bp as main_bp  #main Blueprint
+from . import models #required for Flask-Migrate to detect models
+
 
 def create_app(config_class=Config):
     """Application factory."""
