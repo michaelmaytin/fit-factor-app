@@ -1,32 +1,36 @@
 # FitFactor Frontend Setup
 
 ## 0. Prerequisite
-ensure you have Node.js installed
-download the LTS version
-navigate to frontend directory to run the following commands 
+Ensure you have Node.js installed\
+Download the LTS version\
+Navigate to frontend directory to run the following commands
 
-
-run frontend connecting to Flask backend
 ## 1. Install dependencies
-npm install
+### 'npm install'
 
 ## 2. Create .env file
-in frontend/ directory create local file called .env (will not push due to .gitignore)
+In frontend/ directory create local file called .env (ignored in .gitignore).\
 .env configuration:
    REACT_APP_API_URL=http://localhost:5000/api
 
 ## 3. Run the Frontend
-npm start
- starts the React app on http://localhost:3000  
- automatically proxies API requests to Flask backend running on port 5000.
+### `npm start`
+Starts the React app on http://localhost:3000  \
+Automatically proxies API requests to Flask backend running on port 5000.
 
 ## 4. Building and Testing
-npm run build
-npm test
+
+### `npm run build`
+### `npm test`
+
+
+if encountering dependency errors, new dependencies have likely been added: rerun npm install
 
 ## 5. Assets and Credits
 This logo was generated using the [Picsart AI Logo Generator] (https://picsart.com/logo-generator/).
 
+
+ 
 
 
 ___________________________________________________________________
