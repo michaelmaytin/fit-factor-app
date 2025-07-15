@@ -1,0 +1,218 @@
+.meals-layout-static {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f5fa;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  /* main content */
+  .meals-main-content {
+    flex: 1;
+    padding: 70px 36px 48px 36px;
+    max-width: 790px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .meals-title {
+    font-size: 2.12rem;
+    font-weight: 800;
+    color: #082c79;
+    margin-bottom: 34px;
+    letter-spacing: 0px;
+    /*text-transform: uppercase;*/
+    text-align: center;
+    text-shadow: 0 3px 12px #b2cbe3a3;
+  }
+  
+  .meal-form {
+    background: #fff;
+    padding: 2rem 1.5rem 1.2rem 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 23px rgba(0,44,121,0.10);
+    margin-bottom: 36px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .form-cols {
+    display: flex;
+    gap: 16px;
+  }
+  .form-cols > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .meal-form label {
+    font-weight: 650;
+    color: #334055cc;
+    font-size: 0.97rem;
+    letter-spacing: 0.07em;
+    margin-bottom: 3px;
+  }
+  
+  .meal-form input,
+  .meal-form textarea {
+    padding: 9px 12px;
+    border: 1.7px solid #dbe3ef;
+    border-radius: 7px;
+    font-size: 1.08rem;
+    background: #f9fafc;
+    color: #1c2431;
+    transition: border-color 0.18s;
+    resize: none;
+  }
+  .meal-form input:focus,
+  .meal-form textarea:focus {
+    border-color: #062b7a;
+    background: #fff;
+  }
+  
+  .meal-submit-btn {
+    background: #062b7a;
+    color: #fff;
+    padding: 11px 0 12px 0;
+    width: 100%;
+    font-weight: 700;
+    border: none;
+    border-radius: 9px;
+    font-size: 1.13rem;
+    /*text-transform: uppercase;*/
+    letter-spacing: 0.67px;
+    transition: background 0.22s;
+    box-shadow: 0 2px 6px rgba(8,44,121,0.07);
+  }
+  .meal-submit-btn:hover {
+    background: #008854;
+  }
+  /* side bar implmentation */
+  .meals-sidebar-static {
+    width: 310px;
+    min-width: 230px;
+    background: #fff;
+    box-shadow: -2px 0 18px rgba(8,44,121,0.10);
+    border-radius: 20px 0 0 20px;
+    padding: 55px 20px 28px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 1;
+  }
+  
+  .sidebar-title {
+    font-size: 1.22rem;
+    font-weight: 800;
+    color: #082c79;
+    letter-spacing: 0.7px;
+    /*text-transform: uppercase;*/
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .sidebar-meal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .sidebar-meal-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 13px 13px 10px 12px;
+    border-radius: 7px;
+    background: #f6f8fd;
+    font-size: 1.01rem;
+    box-shadow: 0 2px 9px rgba(8,44,121,0.03);
+    position: relative;
+  }
+  .sidebar-meal-row strong {
+    font-weight: 700;
+    margin-right: 3px;
+    color: #008854;
+  }
+  .sidebar-datetime {
+    font-size: 0.98rem;
+    color: #333e5e;
+    font-weight: 650;
+  }
+  .sidebar-datetime span {
+    color: #888;
+    margin-left: 4px;
+    font-size: 0.93em;
+  }
+  .sidebar-macros {
+    font-size: 0.94rem;
+    margin: 3px 0 2px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 6px;
+  }
+  .sidebar-notes {
+    font-size: 0.96rem;
+    color: #55567b;
+    margin-top: 3px;
+    background: #f2f3f8;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .sidebar-delete-btn {
+    background: none;
+    border: none;
+    color: #ff4747;
+    font-size: 1.21rem;
+    font-weight: 900;
+    cursor: pointer;
+    border-radius: 40%;
+    padding: 0 6px;
+    transition: background 0.13s, color 0.13s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar-delete-btn:hover {
+    background: #ffe5e5;
+  }
+  .sidebar-meal-empty {
+    font-size: 1.1rem;
+    color: #888;
+    font-style: italic;
+    padding: 14px;
+    text-align: center;
+    opacity: 0.86;
+  }
+  
+  /* Responsive handling */
+  @media (max-width: 1000px) {
+    .meals-layout-static {
+      flex-direction: column;
+    }
+    .meals-main-content {
+      max-width: 99vw;
+      padding: 2.2rem 0.7rem 2.2rem 0.7rem;
+    }
+    .meals-sidebar-static {
+      width: 100vw;
+      min-width: 0;
+      border-radius: 0 0 20px 20px;
+      margin-top: 0;
+      padding: 30px 7vw 18px 7vw;
+      position: static;
+      box-shadow: 0 4px 22px rgba(8,44,121,0.07);
+    }
+  }
+  
