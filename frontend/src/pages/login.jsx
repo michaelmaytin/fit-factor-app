@@ -1,6 +1,6 @@
-// src/pages/login.jsx
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import './login.css';
 import logo from '../assets/logo.png';
 
@@ -11,10 +11,16 @@ function Login({ setIsLoggedIn }) {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
-    if (!password) newErrors.password = 'Password is required';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
     return newErrors;
   };
 
@@ -26,10 +32,7 @@ function Login({ setIsLoggedIn }) {
       setErrors(formErrors);
     } else {
       setErrors({});
-      console.log('Login attempted with:', { email, password });
-
-      // ✅ Simulate successful login
-      // In real app, you'd call your backend here
+      // backend logic here
       setIsLoggedIn(true);
     }
   };
@@ -37,7 +40,7 @@ function Login({ setIsLoggedIn }) {
   return (
     <div className="login-wrapper">
       <div className="login-form-container">
-      <img src={logo} alt="Fit Factor Logo" className="login-logo" />
+        <img src={logo} alt="Fit Factor Logo" className="login-logo" />
         <h2 className="login-title">Login</h2>
 
         {errors.form && <Alert variant="danger">{errors.form}</Alert>}
@@ -74,6 +77,10 @@ function Login({ setIsLoggedIn }) {
           <Button variant="primary" type="submit" className="login-button">
             Login
           </Button>
+
+          <p className="mt-3 text-center">
+            Don’t have an account? <Link to="/signup">Sign up</Link>
+          </p>
         </Form>
       </div>
     </div>
