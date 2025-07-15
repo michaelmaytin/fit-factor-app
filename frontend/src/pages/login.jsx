@@ -1,6 +1,7 @@
+// src/pages/login.jsx
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './login.css';
 import logo from '../assets/logo.png';
 
@@ -8,6 +9,8 @@ function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -32,8 +35,8 @@ function Login({ setIsLoggedIn }) {
       setErrors(formErrors);
     } else {
       setErrors({});
-      // backend logic here
       setIsLoggedIn(true);
+      navigate('/dashboard');
     }
   };
 
