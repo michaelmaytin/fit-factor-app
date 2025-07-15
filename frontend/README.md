@@ -24,7 +24,7 @@ npm start
 npm run build
 npm test
 
-## Assets and Credits
+## 5. Assets and Credits
 This logo was generated using the [Picsart AI Logo Generator] (https://picsart.com/logo-generator/).
 
 
