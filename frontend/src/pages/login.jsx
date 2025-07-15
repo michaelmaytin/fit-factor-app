@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import './login.css';
+import logo from '../assets/logo.png';
 
 function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState('');
@@ -36,6 +37,7 @@ function Login({ setIsLoggedIn }) {
   return (
     <div className="login-wrapper">
       <div className="login-form-container">
+      <img src={logo} alt="Fit Factor Logo" className="login-logo" />
         <h2 className="login-title">Login</h2>
 
         {errors.form && <Alert variant="danger">{errors.form}</Alert>}
