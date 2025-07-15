@@ -1,14 +1,13 @@
+// src/pages/login.jsx
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import './Login.css';
+import './login.css';
 
-function Login() {
-  // inputs and errors
+function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
 
-  // validation function
   const validateForm = () => {
     const newErrors = {};
     if (!email) newErrors.email = 'Email is required';
@@ -18,16 +17,19 @@ function Login() {
     return newErrors;
   };
 
-  // handle form submit
   const handleSubmit = (event) => {
     event.preventDefault();
     const formErrors = validateForm();
+
     if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors); // errors
+      setErrors(formErrors);
     } else {
       setErrors({});
       console.log('Login attempted with:', { email, password });
-      // backend API
+
+      // ✅ Simulate successful login
+      // In real app, you'd call your backend here
+      setIsLoggedIn(true);
     }
   };
 
@@ -36,7 +38,6 @@ function Login() {
       <div className="login-form-container">
         <h2 className="login-title">Login</h2>
 
-        {/* form error if needed */}
         {errors.form && <Alert variant="danger">{errors.form}</Alert>}
 
         <Form onSubmit={handleSubmit} className="login-form">
@@ -47,7 +48,7 @@ function Login() {
               placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              isInvalid={!!errors.email}  // highlight input red on error
+              isInvalid={!!errors.email}
             />
             <Form.Control.Feedback type="invalid">
               {errors.email}
@@ -61,7 +62,7 @@ function Login() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              isInvalid={!!errors.password}  // highlight input red on error
+              isInvalid={!!errors.password}
             />
             <Form.Control.Feedback type="invalid">
               {errors.password}
