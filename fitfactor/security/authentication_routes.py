@@ -2,12 +2,14 @@
 
 #should contain endpoints or routes like /log in/log out
 #networking and interface portion of authentication process
-#calls funcitons in authentication service to perform authentication logic upon web route interaction
+#calls functions in authentication service to perform authentication logic upon web route interaction
 #_________________________________________________________
 
-from fitfactor.extensions import db
-from fitfactor.models import User
 from flask import Blueprint, request, jsonify
+from fitfactor.extensions import db #SQLAlchemy()
+from fitfactor.models import User #SQLAlchemy model
+
+
 
 # modular subsection of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -24,11 +26,18 @@ def login():
     # this picks up from temp json body
     email = data.get("email")
     password = data.get("password")
+    if not email or not password:      #if empty data recieved
+        return jsonify({ "error": "Email and Password required." }), 400 #Bad request
+
+    #SQL alchemy lookup user by email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "User not found."}), 404
 
 
     return jsonify({
-        "test email:": email,
-        "test password": password
+        "test user_id": user.user_id,
+        "email": user.email
     }), 200 #test message for now
 
 
