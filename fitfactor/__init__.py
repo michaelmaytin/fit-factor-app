@@ -12,6 +12,7 @@ from fitfactor.config import Config
 from fitfactor.extensions import db, migrate
 from fitfactor.main.routes import api as api_bp
 from fitfactor.main import bp as main_bp  #main Blueprint
+from fitfactor.security.authentication_routes import auth_bp
 from . import models #required for Flask-Migrate to detect models
 
 
@@ -24,8 +25,8 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Register blueprints
+    # Register blueprints for flask routes
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp)
-
+    app.register_blueprint(auth_bp)
     return app
