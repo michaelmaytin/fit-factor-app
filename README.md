@@ -3,70 +3,71 @@ This is a fitness tracking web application created in collaboration during the s
 
 Professor Sharanya Jayaraman will oversee this project
 
-
-### Prerequisites
+___
+# Prerequisites
 Before setting up the project, make sure you have:
+- Python 3.12+ (for backend api)
+- Node.js 18+ (for frontend. includes `npm`) 
+- Docker + Docker Compose (database MYSQL)
 
-- Python 3.12+ with `pip`
-- Node.js 18+ (includes `npm`) - https://nodejs.org/
-- Docker + Docker Compose
+___
+# For Backend
 
-
-
-## Getting Started
-Make sure you have the requirments
-    pip install -r requirments.txt
-
-once you ensure that your current environment works after setup, run:
-    pipfreeze > requirements.lock
-also use that if you make changes to  requirements.txt
+Make sure you have the requirements
+- pip install -r requirments.txt \
+If you make changes to  requirements.txt, run:
+- pipfreeze > requirements.lock
 
 
-### For Backend
+
 Choose one of these approaches to get your local database up and running:
 
-   # Option A: Native MySQL 
+   ### Option A: Native MySQL 
        1.Install MySQL Server from https://dev.mysql.com/downloads/mysql/
        2.Set up Root password
        3.Create database fit_factor
        4.Create .env file in fit_factor_app directory
        5.Configure .env to:
-           FLASK_APP=fitfactor:create_app
-           FLASK_ENV=development
-           DATABASE_URL=mysql+pymysql://fitfactor_user:yourpass@127.0.0.1:3306/fit_factor
-           SECRET_KEY=your_random_secret
+            FLASK_APP=fitfactor:create_app
+            FLASK_ENV=development
+            DATABASE_URL=mysql+pymysql://fitfactor_user:yourpass@127.0.0.1:3306/fit_factor
+            SECRET_KEY=your_random_secret
+            PYTHONPATH=.
        6.Run Migrations
            flask db upgrade
        7.Start Server
            flask run
 
-   # Option B: Docker 
+   ### Option B: Docker 
        1.Install Docker Desktop
        2.Start docker-compose.yml
            docker compose up -d
        3.Create .env file in fit_factor_app directory
        4.Configure .env
-           FLASK_APP=fitfactor:create_app
-           FLASK_ENV=development
-           DATABASE_URL=mysql+pymysql://fitfactor_user:devpass@127.0.0.1:3307/fit_factor
-           SECRET_KEY=your_random_secret
+            FLASK_APP=fitfactor:create_app
+            FLASK_ENV=development
+            DATABASE_URL=mysql+pymysql://fitfactor_user:devpass@127.0.0.1:3307/fit_factor
+            SECRET_KEY=your_random_secret
+            PYTHONPATH=.
        5.Run Migration
            flask db upgrade
        6.Start server
            flask run
          - Flask will run at http://localhost:5000
 
-   # to confirm if .env is being read properly
-         run: flask shell
+
+ ### To verify environment variables
+1. run: flask shell
             >>>from flask import current_app
             >>>print(current_app.config["SECRET_KEY"])
             >>>print(current_app.config["SQLALCHEMY_DATABASE_URI"])
-         Confirm these match what you entered as your key and URL
-         run: exit()
+2. Confirm these match what you entered as your key and URL
+         
+3. run: exit()
    
 
 
-### Making schema changes
+# Making schema changes
 
 1. Edit `fitfactor/models.py` (add columns, tables, etc.).
 2. Run  
@@ -74,6 +75,12 @@ Choose one of these approaches to get your local database up and running:
    flask db migrate -m "change you made"
    flask db upgrade
 
+# RBAC testing and development
+1. Read seed_roles.py for details
+2. Make sure db is up (docker compose up -d)
+2. Run this script in a terminal from project root
+'run_seed_roles_pstest.ps1'
 
-### For Front End
-- follow README in fit-factor-app/frontend/
+
+# For Front End
+1. see frontend/README.md for 'npm install' and 'npm start' instructions
