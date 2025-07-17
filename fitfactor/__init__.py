@@ -14,7 +14,9 @@ from fitfactor.main.routes import api as api_bp
 from fitfactor.main import bp as main_bp  #main Blueprint
 from fitfactor.security.authentication_routes import auth_bp
 from . import models #required for Flask-Migrate to detect models
+from flask_jwt_extended import JWTManager
 
+jwt = JWTManager()
 
 def create_app(config_class=Config):
     """Application factory."""
@@ -22,6 +24,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # Initialize Flask extensions
+    jwt.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
 

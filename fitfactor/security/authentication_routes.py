@@ -9,7 +9,7 @@ from flask import Blueprint, request, jsonify
 from fitfactor.extensions import db #SQLAlchemy()
 from fitfactor.models import User #SQLAlchemy model
 from fitfactor.security.password_handler import verify_pass
-
+from flask_jwt_extended import create_access_token
 
 # modular subsection of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -37,10 +37,12 @@ def login():
     if not verify_pass(user.password, entered_password):
         return jsonify({"error": "Invalid password."}), 401
 
+
+    access_token = create_access_token(identity=user.user_id)
+
     return jsonify({
         "message": "Login successful",
-        "email": user.email,
-        "user_id": user.user_id
+        "access_token": access_token
     }), 200
 
 
