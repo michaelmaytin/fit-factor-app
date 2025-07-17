@@ -5,7 +5,7 @@
 #calls functions in authentication service to perform authentication logic upon web route interaction
 #_________________________________________________________
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from fitfactor.extensions import db #SQLAlchemy()
 from fitfactor.models import User #SQLAlchemy model
 from fitfactor.security.password_handler import verify_pass
@@ -40,10 +40,26 @@ def login():
 
     access_token = create_access_token(identity=user.user_id)
 
-    return jsonify({
+
+    #setting up persistent cookie for login
+    response = make_response(jsonify({
         "message": "Login successful",
-        "access_token": access_token
-    }), 200
+    }), 200)
+    #JWT token will be stored in a secure browser cookie (HTTP only or local host)
+    response.set_cookie(
+        "access_token_cookie",
+        value=access_token,
+        httponly=True, #prevent js from accessing cookie to stop js malware
+        secure=False, #keep as false during local development. localhost will reject cookie if set to true.
+        samesite='Lax', #
+        max_age=60*60*24*7 #7 days and then refresh saved token
+    )
+
+
+
+
+
+    return response
 
 
 

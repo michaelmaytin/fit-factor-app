@@ -79,7 +79,7 @@ def roles():
             test_user = User(
                 username="TestUser",
                 email=test_email,
-                password=hash_pass("123"),
+                password=hash_pass("123456"),
                 role=user_role
             )
             db.session.add(test_user)
