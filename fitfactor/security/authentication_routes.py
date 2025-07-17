@@ -8,7 +8,7 @@
 from flask import Blueprint, request, jsonify
 from fitfactor.extensions import db #SQLAlchemy()
 from fitfactor.models import User #SQLAlchemy model
-
+from fitfactor.security.password_handler import verify_pass
 
 
 # modular subsection of main routes
@@ -24,21 +24,24 @@ def login():
 
     # frontend sends entered credentials to temp json request body, (from axios.post)
     # this picks up from temp json body
-    email = data.get("email")
-    password = data.get("password")
-    if not email or not password:      #if empty data recieved
+    entered_email = data.get("email")
+    entered_password = data.get("password")
+    if not entered_email or not entered_password:      #if empty data received
         return jsonify({ "error": "Email and Password required." }), 400 #Bad request
 
     #SQL alchemy lookup user by email
-    user = User.query.filter_by(email=email).first()
+    user = User.query.filter_by(email=entered_email).first()
     if not user:
         return jsonify({"error": "User not found."}), 404
 
+    if not verify_pass(user.password, entered_password):
+        return jsonify({"error": "Invalid password."}), 401
 
     return jsonify({
-        "test user_id": user.user_id,
-        "email": user.email
-    }), 200 #test message for now
+        "message": "Login successful",
+        "email": user.email,
+        "user_id": user.user_id
+    }), 200
 
 
 
