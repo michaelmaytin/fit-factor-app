@@ -14,14 +14,27 @@ from fitfactor.main.routes import api as api_bp
 from fitfactor.main import bp as main_bp  #main Blueprint
 from fitfactor.security.authentication_routes import auth_bp
 from . import models #required for Flask-Migrate to detect models
+from flask_jwt_extended import JWTManager
 
+jwt = JWTManager()
 
 def create_app(config_class=Config):
     """Application factory."""
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    app.config["JWT_ACCESS_COOKIE_NAME"] = "access_token_cookie"
+    app.config["JWT_COOKIE_SECURE"] = False  # False for local development (set to true for HTTPS)
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False  # Can enable later if needed
+
+    from flask_cors import CORS
+    CORS(app, supports_credentials=True)
+
+
+
 
     # Initialize Flask extensions
+    jwt.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
 

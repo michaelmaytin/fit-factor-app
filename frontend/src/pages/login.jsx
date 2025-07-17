@@ -4,6 +4,8 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css';
 import logo from '../assets/logo.png';
+import axios from 'axios';
+
 
 function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState('');
@@ -27,18 +29,28 @@ function Login({ setIsLoggedIn }) {
     return newErrors;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formErrors = validateForm();
 
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
-    } else {
-      setErrors({});
-      setIsLoggedIn(true);
-      navigate('/dashboard');
+      return;
+      }
+
+    try {
+        const response = await axios.post('http://localhost:5000/api/auth/login', {email, password}, {withCredentials: true} //sends cookie
+        );
+
+        alert(response.data.message);
+        setIsLoggedIn(true);
+        navigate("/dashboard");
+    } catch(err) {
+        console.error(err);
+        setErrors({form: err.response?.data?.error || "Login failed."});
     }
-  };
+};
+
 
   return (
     <div className="login-wrapper">

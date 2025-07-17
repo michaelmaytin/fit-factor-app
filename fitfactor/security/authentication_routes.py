@@ -5,11 +5,11 @@
 #calls functions in authentication service to perform authentication logic upon web route interaction
 #_________________________________________________________
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from fitfactor.extensions import db #SQLAlchemy()
 from fitfactor.models import User #SQLAlchemy model
-
-
+from fitfactor.security.password_handler import verify_pass
+from flask_jwt_extended import create_access_token
 
 # modular subsection of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -24,21 +24,42 @@ def login():
 
     # frontend sends entered credentials to temp json request body, (from axios.post)
     # this picks up from temp json body
-    email = data.get("email")
-    password = data.get("password")
-    if not email or not password:      #if empty data recieved
+    entered_email = data.get("email")
+    entered_password = data.get("password")
+    if not entered_email or not entered_password:      #if empty data received
         return jsonify({ "error": "Email and Password required." }), 400 #Bad request
 
     #SQL alchemy lookup user by email
-    user = User.query.filter_by(email=email).first()
+    user = User.query.filter_by(email=entered_email).first()
     if not user:
         return jsonify({"error": "User not found."}), 404
 
+    if not verify_pass(user.password, entered_password):
+        return jsonify({"error": "Invalid password."}), 401
 
-    return jsonify({
-        "test user_id": user.user_id,
-        "email": user.email
-    }), 200 #test message for now
+
+    access_token = create_access_token(identity=user.user_id)
+
+
+    #setting up persistent cookie for login
+    response = make_response(jsonify({
+        "message": "Login successful",
+    }), 200)
+    #JWT token will be stored in a secure browser cookie (HTTP only or local host)
+    response.set_cookie(
+        "access_token_cookie",
+        value=access_token,
+        httponly=True, #prevent js from accessing cookie to stop js malware
+        secure=False, #keep as false during local development. localhost will reject cookie if set to true.
+        samesite='Lax', #
+        max_age=60*60*24*7 #7 days and then refresh saved token
+    )
+
+
+
+
+
+    return response
 
 
 
