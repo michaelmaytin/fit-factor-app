@@ -96,7 +96,17 @@ class Meal(db.Model):
     notes = db.Column(db.Text)
     def __repr__(self):
         return f"<Meal {self.meal_id} for User {self.user_id}>"
-
+    def serialize(self):
+        return {
+            "id":        self.meal_id,
+            "user_id":   self.user_id,
+            "meal_time": self.meal_time.isoformat() if self.meal_time else None,
+            "calories":  self.calories,
+            "protein_g": self.protein_g,
+            "carbs_g":   self.carbs_g,
+            "fats_g":    self.fats_g,
+            "notes":     self.notes,
+       }
 # Foods Table
 class Food(db.Model):
     __tablename__ = 'Food'
@@ -120,6 +130,15 @@ class Progress(db.Model):
     notes = db.Column(db.Text)
     def __repr__(self):
         return f"<Progress {self.entry_date} for User {self.user_id}>"
+    def serialize(self):
+        return {
+            "id":                self.progress_id,
+            "user_id":           self.user_id,
+            "entry_date":        self.entry_date.isoformat() if self.entry_date else None,
+            "weight_lbs":        self.weight_lbs,
+            "body_fat_percentage": self.body_fat_percentage,
+            "notes":             self.notes,
+        }
 
 #this initializes roles upon startup
 @event.listens_for(Role.__table__, "after_create")
