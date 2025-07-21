@@ -1,14 +1,20 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import './navbar.css'; 
+import './navbar.css';
+import axios from 'axios';
 
 function AppNavbar({ setIsLoggedIn }) {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    navigate('/');
+  const handleLogout = async () => {
+      try {
+          await axios.post("http://localhost:5000/api/auth/logout",{},{ withCredentials: true });
+          setIsLoggedIn(false);
+          navigate('/');
+      } catch (err) {
+          console.error("Logout failed:", err);
+      }
   };
 
   return (

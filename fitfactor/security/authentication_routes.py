@@ -11,10 +11,12 @@ from fitfactor.models import User #SQLAlchemy model
 from fitfactor.security.password_handler import verify_pass
 from flask_jwt_extended import create_access_token
 
+
 # modular subsection of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
+#connected to frontend via login.jsx thru axios
 #POST /api/auth/login
 #route waits to accept login credential data from React
 @auth_bp.route("/login", methods=["POST"])
@@ -42,9 +44,7 @@ def login():
 
 
     #setting up persistent cookie for login
-    response = make_response(jsonify({
-        "message": "Login successful",
-    }), 200)
+    response = make_response(jsonify({"message": "Login successful",}), 200)
     #JWT token will be stored in a secure browser cookie (HTTP only or local host)
     response.set_cookie(
         "access_token_cookie",
@@ -55,15 +55,14 @@ def login():
         max_age=60*60*24*7 #7 days and then refresh saved token
     )
 
+    return response
+##########################
 
-
-
-
+@auth_bp.route("/logout", methods=["POST"])
+def logout():
+    response = make_response(jsonify({"message": "Logout successful"}), 200)
+    response.delete_cookie("access_token_cookie")
     return response
 
 
 
-
-
-
-#will be connected to frontend via login.jsx thru axios
