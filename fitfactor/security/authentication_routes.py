@@ -16,7 +16,7 @@ from fitfactor.main.routes import api_response
 #modulcar section of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
-@auth_bp.route("/me", methods=["GET"])
+@auth_bp.route("/users/me", methods=["GET"])
 @jwt_required()
 def get_this_user():
     print("GET /users/me hit") #message for backend debug
