@@ -7,14 +7,25 @@
 
 from flask import Blueprint, request, jsonify, make_response
 from fitfactor.extensions import db #SQLAlchemy()
-from fitfactor.models import User #SQLAlchemy model
-from fitfactor.security.password_handler import verify_pass
-from flask_jwt_extended import create_access_token
+from fitfactor.models import User, Role #SQLAlchemy model
+from fitfactor.security.password_handler import verify_pass, hash_pass
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 
-
-# modular subsection of main routes
+#modulcar section of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
+@auth_bp.route("/me", methods=["GET"])
+@jwt_required()
+def who_am_i():
+    user_id = get_jwt_identity()
+    claims  = get_jwt()
+    user    = User.query.get_or_404(user_id)
+    return jsonify({
+        "user_id":  user.user_id,
+        "username": user.username,
+        "email":    user.email,
+        "role":     claims.get("role")
+    }), 200
 
 #connected to frontend via login.jsx thru axios
 #POST /api/auth/login
@@ -39,10 +50,11 @@ def login():
     if not verify_pass(user.password, entered_password):
         return jsonify({"error": "Invalid password."}), 401
 
-
-    access_token = create_access_token(identity=user.user_id)
-
-
+    
+    access_token = create_access_token(
+        identity=str(user.user_id),
+        additional_claims={ "role": user.role.role_name })
+    
     #setting up persistent cookie for login
     response = make_response(jsonify({"message": "Login successful",}), 200)
     #JWT token will be stored in a secure browser cookie (HTTP only or local host)
@@ -56,7 +68,50 @@ def login():
     )
 
     return response
-##########################
+
+@auth_bp.route("/signup", methods=["POST"])
+def signup():
+    data = request.get_json() or {}
+    username = data.get("username")
+    email    = data.get("email")
+    password = data.get("password")
+    if not username or not email or not password:
+        return jsonify({"error":"Username, email and password required."}),400
+
+    # check dupes
+    if User.query.filter_by(email=email).first():
+        return jsonify({"error":"Email already registered."}),409
+    if User.query.filter_by(username=username).first():
+        return jsonify({"error":"Username taken."}),409
+
+    # grab default role
+    role = Role.query.filter_by(role_name="User").first()
+    if not role:
+        return jsonify({"error":"User role missing."}),500
+
+    # create & commit
+    new_user = User(username=username,
+                email=email,
+                password=hash_pass(password),
+                role_id=role.role_id)
+    db.session.add(new_user)
+    db.session.commit()
+
+    # issue token
+    token = create_access_token(
+        identity=str(new_user.user_id),
+        additional_claims={"role": role.role_name}
+    )
+    resp = make_response(jsonify({"message":"Signup successful"}),201)
+    resp.set_cookie(
+        "access_token_cookie",
+        value=token,
+        httponly=True,
+        secure=False,
+        samesite="Lax",
+        max_age=60*60*24*7
+    )
+    return resp
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
