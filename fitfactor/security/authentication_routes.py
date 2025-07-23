@@ -11,64 +11,36 @@ from fitfactor.models import User, Role #SQLAlchemy model
 from fitfactor.security.password_handler import verify_pass, hash_pass
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, get_jwt_identity, get_jwt
 from datetime import timedelta
-
+from fitfactor.main.routes import api_response
 
 #modulcar section of main routes
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
-def who_am_i():
+def get_this_user():
+    print("GET /users/me hit") #message for backend debug
+
     user_id = get_jwt_identity()
-    claims  = get_jwt()
-    user    = User.query.get_or_404(user_id)
-    return jsonify({
-        "user_id":  user.user_id,
-        "username": user.username,
-        "email":    user.email,
-        "role":     claims.get("role")
-    }), 200
-
-#connected to frontend via login.jsx thru axios
-#POST /api/auth/login
-#route waits to accept login credential data from React
-@auth_bp.route("/login", methods=["POST"])
-def login():
-    #extract email and password
-    data = request.get_json() or {} #empty dict if no json available to prevent crash
-
-    # frontend sends entered credentials to temp json request body, (from axios.post)
-    # this picks up from temp json body
-    entered_email = data.get("email")
-    entered_password = data.get("password")
-    if not entered_email or not entered_password:      #if empty data received
-        return jsonify({ "error": "Email and Password required." }), 400 #Bad request
-
-    #SQL alchemy lookup user by email
-    user = User.query.filter_by(email=entered_email).first()
+    claims = get_jwt()
+    user = User.query.get(user_id)
     if not user:
-        return jsonify({"error": "User not found."}), 404
+        return api_response(404,  message=f"No user found")
 
-    if not verify_pass(user.password, entered_password):
-        return jsonify({"error": "Invalid password."}), 401
+    return api_response(200, payload={
+        "user_id": user.user_id,
+        "username": user.username,
+        "email": user.email,
+        "role": claims.get("role"),
+        "age": user.age,
+        "gender": user.gender,
+        "height_ft":user.height_ft,
+        "weight_lbs": user.weight_lbs,
+        "goal": user.goal,
+    }, message="User info retrieved")
 
 
-    access_token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=7), additional_claims={ "role": user.role.role_name })
 
-    #setting up persistent cookie for login
-    response = make_response(jsonify({"message": "Login successful",}), 200)
-    #JWT token will be stored in a secure browser cookie (HTTP only or local host)
-    set_access_cookies(response, access_token, max_age=60*60*24*7)
-    # response.set_cookie(
-    #     "access_token_cookie",
-    #     value=access_token,
-    #     httponly=True, #prevent js from accessing cookie to stop js malware
-    #     secure=False, #keep as false during local development. localhost will reject cookie if set to true.
-    #     samesite='Lax', #
-    #     max_age=60*60*24*7 #7 days and then refresh saved token
-    # )
-
-    return response
 
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
@@ -114,9 +86,45 @@ def signup():
     )
     return resp
 
+
+
+#connected to frontend via login.jsx thru axios
+#POST /api/auth/login
+#route waits to accept login credential data from React
+@auth_bp.route("/login", methods=["POST"])
+def login():
+    #extract email and password
+    data = request.get_json() or {} #empty dict if no json available to prevent crash
+    # frontend sends entered credentials to temp json request body, (from axios.post)
+    # this picks up from temp json body
+    entered_email = data.get("email")
+    entered_password = data.get("password")
+    if not entered_email or not entered_password:      #if empty data received
+        return jsonify({ "error": "Email and Password required." }), 400 #Bad request
+
+    user = User.query.filter_by(email=entered_email).first()
+    if not user:
+        return jsonify({"error": "User not found."}), 404
+
+    #check against hashed pw to verify login
+    if not verify_pass(user.password, entered_password):
+        return jsonify({"error": "Invalid password."}), 401
+
+    access_token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=7), additional_claims={ "role": user.role.role_name })
+
+    #setting up persistent cookie for login
+    response = make_response(jsonify({"message": "Login successful",}), 200)
+    #JWT token will be stored in a secure browser cookie (HTTP only or local host)
+    set_access_cookies(response, access_token, max_age=60*60*24*7)
+
+    return response
+
+
+
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
     response = make_response(jsonify({"message": "Logout successful"}), 200)
     response.delete_cookie("access_token_cookie")
+
     return response
 

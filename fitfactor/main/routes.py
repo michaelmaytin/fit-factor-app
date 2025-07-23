@@ -309,24 +309,3 @@ def delete_progress(progress_id):
     return api_response(200, message="Progress deleted")
 
 
-@api.route("/users/me", methods=["GET"])
-@jwt_required()
-def get_this_user():
-    print("GET /users/me hit") #message for backend debug
-
-    user_id = get_jwt_identity()
-
-    user = User.query.get(user_id)
-    if not user:
-        return api_response(404,  message=f"No user found")
-
-    return api_response(200, payload={
-        "user_id": user.user_id,
-        "username": user.username,
-        "email": user.email,
-        "age": user.age,
-        "gender": user.gender,
-        "height_ft":user.height_ft,
-        "weight_lbs": user.weight_lbs,
-        "goal": user.goal,
-    }, message="User info retrieved")

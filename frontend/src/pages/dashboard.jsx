@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './dashboard.css';
+import adminpanel from './admin';
+import trainerpanel from './trainer';
 
 // placeholder set everything N/A
 // const user = {
@@ -21,7 +23,7 @@ export default function Dashboard() {
 
     //load user
     useEffect(() => {
-        axios.get("http://localhost:5000/api/users/me", {withCredentials: true})    //with credentials allows JWT token to be sent via axios
+        axios.get("http://localhost:5000/api/auth/me", {withCredentials: true})    //with credentials allows JWT token to be sent via axios
         .then(response => {setUser (response.data.data);})
         .catch(err => { window.location.href = "/login"; console.error("failed to fetch user data", err);});
        //if cookie is deleted or expired, user redirected to login upon app refresh or restart
@@ -121,6 +123,8 @@ export default function Dashboard() {
             </ul>
           )}
         </div>
+        {user?.role === 'admin' && adminpanel()}
+        {user?.role === 'trainer' && trainerpanel()}
       </div>
     </div>
   );
