@@ -3,8 +3,9 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './signup.css';
 import logo from '../assets/logo.png';
+import axios from 'axios';
 
-function Signup({ setIsLoggedIn }) {
+function Signup({ setIsLoggedIn, setMe }) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -42,22 +43,30 @@ function Signup({ setIsLoggedIn }) {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('📝 handleSubmit fired', formData);
     const formErrors = validateForm();
 
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       setSuccess(false);
-    } else {
-      setErrors({});
-      // successful signup
-      setSuccess(true);
-      setIsLoggedIn && setIsLoggedIn(true); // auto-login after signup
+      return
+    }
 
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
+    setErrors({});
+    try {
+      await axios.post('/api/auth/signup', {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      }, { withCredentials: true });
+      setIsLoggedIn(true);
+      const meRes = await axios.get('/api/auth/me', { withCredentials: true });
+      setMe(meRes.data);
+      navigate('/dashboard');
+    } catch (err) {
+      setErrors({ form: err.response?.data?.error || 'Signup failed' });
     }
   };
 

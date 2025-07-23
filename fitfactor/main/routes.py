@@ -1,5 +1,8 @@
 # fitfactor/main/routes.py
+#this file declares endpoints for the client
 
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from fitfactor.security.rbac import roles_required
 from flask import Blueprint, request, jsonify, abort, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from fitfactor.extensions import db
@@ -18,23 +21,29 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 #gets user roles
 @api.route("/roles", methods=["GET"])
+@jwt_required()
+@roles_required("Admin")
 def get_roles():
     roles = [r.role_name for r in Role.query.order_by(Role.role_id).all()]
     return api_response(200, payload=roles)
 
 #-----------Workouts----------------------------
-#lists all stored workouts in database and returns searlizes JSON
+#lists all stored workouts in database and returns searlized JSON
+
 @api.route("/workouts", methods=["GET"])
+@jwt_required()
 def list_workouts():
-    workouts = Workout.query.order_by(Workout.workout_id).all()
-    serialized_workouts = [work.serialize() for work in workouts]
-    return api_response(200, payload=serialized_workouts)
+    user_id = get_jwt_identity() #so the user only sees their own workout
+    workouts = (Workout.query.filter_by(user_id=user_id).order_by(Workout.workout_id).all())
+    return api_response(200, payload=[w.serialize() for w in workouts])
 
 #creates a JSON file with date, user_id, druations_mins, and type
 @api.route("/workouts", methods=["POST"])
+@jwt_required()
 def create_workout():
+    user_id = get_jwt_identity()
     data = request.get_json() or {}
-    required_fields = ["date", "user_id"]
+    required_fields = ["date"]
     missing_fields = [f for f in required_fields if not data.get(f)]
     
     if missing_fields:
@@ -53,7 +62,7 @@ def create_workout():
         date=date_obj,
         duration_mins=data.get("duration_mins"),
         type=data.get("type"),
-        user_id=data["user_id"]
+        user_id=user_id
     )
     db.session.add(work)
     try:
@@ -65,14 +74,22 @@ def create_workout():
 
 #retrieves workout by ID
 @api.route("/workouts/<int:workout_id>", methods=["GET"])
+@jwt_required()
 def get_workout(workout_id):
     work = Workout.query.get_or_404(workout_id)
+    claims = get_jwt()
+    user_id = get_jwt_identity()
+    if work.user_id != user_id and claims.get("role") not in ("Trainer","Admin"):
+        abort(403)
     return api_response(200, payload=work.serialize(), message="Workout retrieved")
     
 #updates workout by ID   
 @api.route("/workouts/<int:workout_id>", methods=["PUT"])
+@jwt_required()
 def update_workout(workout_id):
         work = Workout.query.get_or_404(workout_id)
+        if work.user_id != get_jwt_identity():
+            abort(403)
         data = request.get_json() or {}
         if "date" in data:
             try:
@@ -93,8 +110,11 @@ def update_workout(workout_id):
 
 #deletes workout by Id
 @api.route("/workouts/<int:workout_id>", methods=["DELETE"])
+@jwt_required()
 def delete_workout(workout_id):
     work = Workout.query.get_or_404(workout_id)
+    if work.user_id != get_jwt_identity():
+        abort(403)
     db.session.delete(work)
     try:
         db.session.commit()
@@ -104,19 +124,36 @@ def delete_workout(workout_id):
     return api_response(200, message="Workout deleted")
 
 # ------------Meals-----------------
+#retrieves meal with token
+@api.route("/meals/<int:meal_id>", methods=["GET"])
+@jwt_required()
+def get_meal(meal_id):
+    meal    = Meal.query.get_or_404(meal_id)
+    user_id = get_jwt_identity()
+    claims  = get_jwt()
+    # allow admin or trainer to get workouts from ID
+    if meal.user_id != user_id and claims.get("role") not in ("Trainer","Admin"):
+        abort(403)
+    return api_response(200, payload=meal.serialize())
+
+
 
 #list meals
 @api.route("/meals", methods=["GET"])
+@jwt_required()
 def list_meals():
-    meals = Meal.query.all()
+    user_id = get_jwt_identity()
+    meals = Meal.query.filter_by(user_id=user_id).all()
     return api_response(200, payload=[m.serialize() for m in meals])
+
 
 #creates new meal entry with JSON
 @api.route("/meals", methods=["POST"])
+@jwt_required()
 def create_meal():
     data = request.get_json()
-    # assume everything’s there
-    required = ["user_id", "meal_time"]
+    user_id = get_jwt_identity()
+    required = ["meal_time"]
     missing = [f for f in required if not data.get(f)]
     if missing:
         return api_response(
@@ -130,7 +167,7 @@ def create_meal():
             400,
             message="`meal_time` must be a valid ISO8601 datetime (e.g. 2025-07-10T12:00:00)"
         )
-    meal = Meal(user_id=data["user_id"], meal_time=meal_time,
+    meal = Meal(user_id=user_id, meal_time=meal_time,
         calories=data.get("calories"), protein_g=data.get("protein_g"),
         carbs_g=data.get("carbs_g"), fats_g=data.get("fats_g"),
         notes=data.get("notes"))
@@ -142,16 +179,14 @@ def create_meal():
         return api_response(500, message="Database error")
     return api_response(201, payload={"id":meal.meal_id})
 
-#retrieves single meal by ID
-@api.route("/meals/<int:meal_id>", methods=["GET"])
-def get_meal(meal_id):
-    meal = Meal.query.get_or_404(meal_id)
-    return api_response(200, payload=meal.serialize())
 
 #updates fields of existing meals
 @api.route("/meals/<int:meal_id>", methods=["PUT"])
+@jwt_required()
 def update_meal(meal_id):
     meal = Meal.query.get_or_404(meal_id)
+    if meal.user_id != get_jwt_identity():
+        abort(403)
     data = request.get_json()
     if "meal_time" in data:
         try:
@@ -169,8 +204,11 @@ def update_meal(meal_id):
 
 #deletes meals
 @api.route("/meals/<int:meal_id>", methods=["DELETE"])
+@jwt_required()
 def delete_meal(meal_id):
     meal = Meal.query.get_or_404(meal_id)
+    if meal.user_id != get_jwt_identity():
+        abort(403)
     db.session.delete(meal)
     try:
         db.session.commit()
@@ -183,15 +221,20 @@ def delete_meal(meal_id):
 
 #list out progress logs
 @api.route("/progress", methods=["GET"])
+@jwt_required()
 def list_progress():
-    prog = Progress.query.all()
-    return api_response(200, payload=[p.serialize() for p in prog])
+    user_id = get_jwt_identity()
+    logs = Progress.query.filter_by(user_id=user_id).all()
+    return api_response(200, payload=[p.serialize() for p in logs])
+
 
 #creates new log
 @api.route("/progress", methods=["POST"])
+@jwt_required()
 def create_progress():
+    user_id = get_jwt_identity()
     data = request.get_json()
-    required = ["user_id", "entry_date"]
+    required = ["entry_date"]
     missing = [f for f in required if not data.get(f)]
     if missing:
         return api_response(
@@ -205,7 +248,7 @@ def create_progress():
             400,
             message="`entry_date` must be a valid date in YYYY-MM-DD format"
         )
-    prog = Progress(user_id=data["user_id"], entry_date=entry_data,
+    prog = Progress(user_id=user_id, entry_date=entry_data,
         weight_lbs=data.get("weight_lbs"),
         body_fat_percentage=data.get("body_fat_percentage"),
         notes=data.get("notes"))
@@ -219,14 +262,23 @@ def create_progress():
 
 #retrieves single log by ID
 @api.route("/progress/<int:progress_id>", methods=["GET"])
+@jwt_required()
 def get_progress(progress_id):
-    prog = Progress.query.get_or_404(progress_id)
+    prog    = Progress.query.get_or_404(progress_id)
+    user_id = get_jwt_identity()
+    claims  = get_jwt()
+    if prog.user_id != user_id and claims.get("role") not in ("Trainer","Admin"):
+        abort(403)
     return api_response(200, payload=prog.serialize())
+
 
 #updates logs 
 @api.route("/progress/<int:progress_id>", methods=["PUT"])
+@jwt_required()
 def update_progress(progress_id):
     prog = Progress.query.get_or_404(progress_id)
+    if prog.user_id != get_jwt_identity():
+        abort(403)
     data = request.get_json()
     if "entry_date" in data:
         try:
@@ -243,8 +295,11 @@ def update_progress(progress_id):
 
 #deletes logs
 @api.route("/progress/<int:progress_id>", methods=["DELETE"])
+@jwt_required()
 def delete_progress(progress_id):
     prog = Progress.query.get_or_404(progress_id)
+    if prog.user_id != get_jwt_identity():
+        abort(403)
     db.session.delete(prog)
     try:
         db.session.commit()
