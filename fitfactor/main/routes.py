@@ -1,8 +1,9 @@
 # fitfactor/main/routes.py
 
 from flask import Blueprint, request, jsonify, abort, make_response
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from fitfactor.extensions import db
-from fitfactor.models import Role, Workout, Meal, Progress
+from fitfactor.models import Role, Workout, Meal, Progress, User
 from datetime import datetime
 
 #helper function for convenience 
@@ -251,3 +252,26 @@ def delete_progress(progress_id):
         db.session.rollback()
         return api_response(500, message="Database error")
     return api_response(200, message="Progress deleted")
+
+
+@api.route("/users/me", methods=["GET"])
+@jwt_required()
+def get_this_user():
+    print("GET /users/me hit") #message for backend debug
+
+    user_id = get_jwt_identity()
+
+    user = User.query.get(user_id)
+    if not user:
+        return api_response(404,  message=f"No user found")
+
+    return api_response(200, payload={
+        "user_id": user.user_id,
+        "username": user.username,
+        "email": user.email,
+        "age": user.age,
+        "gender": user.gender,
+        "height_ft":user.height_ft,
+        "weight_lbs": user.weight_lbs,
+        "goal": user.goal,
+    }, message="User info retrieved")

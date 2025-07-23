@@ -9,7 +9,8 @@ from flask import Blueprint, request, jsonify, make_response
 from fitfactor.extensions import db #SQLAlchemy()
 from fitfactor.models import User #SQLAlchemy model
 from fitfactor.security.password_handler import verify_pass
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, set_access_cookies
+from datetime import timedelta
 
 
 # modular subsection of main routes
@@ -39,21 +40,20 @@ def login():
     if not verify_pass(user.password, entered_password):
         return jsonify({"error": "Invalid password."}), 401
 
-
-    access_token = create_access_token(identity=user.user_id)
-
+    access_token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=7))
 
     #setting up persistent cookie for login
     response = make_response(jsonify({"message": "Login successful",}), 200)
     #JWT token will be stored in a secure browser cookie (HTTP only or local host)
-    response.set_cookie(
-        "access_token_cookie",
-        value=access_token,
-        httponly=True, #prevent js from accessing cookie to stop js malware
-        secure=False, #keep as false during local development. localhost will reject cookie if set to true.
-        samesite='Lax', #
-        max_age=60*60*24*7 #7 days and then refresh saved token
-    )
+    set_access_cookies(response, access_token, max_age=60*60*24*7)
+    # response.set_cookie(
+    #     "access_token_cookie",
+    #     value=access_token,
+    #     httponly=True, #prevent js from accessing cookie to stop js malware
+    #     secure=False, #keep as false during local development. localhost will reject cookie if set to true.
+    #     samesite='Lax', #
+    #     max_age=60*60*24*7 #7 days and then refresh saved token
+    # )
 
     return response
 ##########################
@@ -63,6 +63,4 @@ def logout():
     response = make_response(jsonify({"message": "Logout successful"}), 200)
     response.delete_cookie("access_token_cookie")
     return response
-
-
 
