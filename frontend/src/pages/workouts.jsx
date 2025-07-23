@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './workouts.css';
 
 export default function Workouts() {
@@ -13,12 +14,19 @@ export default function Workouts() {
     weight_lbs: ''
   });
 
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/workouts', { withCredentials: true })
+    .then(response => {setWorkouts(response.data.data);})
+    .catch(err => {console.error("Failed to load workouts:", err);});
+    }, []);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (
       !form.date ||
@@ -29,26 +37,37 @@ export default function Workouts() {
       !form.reps
     ) return;
 
-    const workout = {
-      id: Date.now(),
-      ...form
-    };
+    try {
+       const response = await axios.post('http://localhost:5000/api/workouts', form, { withCredentials: true });
+        const workout = {
+          ...form,
+          id: response.data.payload.id
+        };
+        setWorkouts(prev => [workout, ...prev]);
+//         const refreshed = await axios.get('http://localhost:5000/api/workouts', { withCredentials: true });
+//         setWorkouts(refreshed.data.data);
 
-    setWorkouts(prev => [workout, ...prev]);
-
-    setForm({
-      date: '',
-      type: '',
-      duration_mins: '',
-      exercise_name: '',
-      sets: '',
-      reps: '',
-      weight_lbs: ''
-    });
+        setForm({
+          date: '',
+          type: '',
+          duration_mins: '',
+          exercise_name: '',
+          sets: '',
+          reps: '',
+          weight_lbs: ''
+        });
+    }catch (err) {
+        console.error("Workout submission failed", err)}
   };
 
-  const deleteWorkout = (id) =>
-    setWorkouts(prev => prev.filter(w => w.id !== id));
+   const deleteWorkout = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/workouts/${id}`, { withCredentials: true });
+      setWorkouts(prev => prev.filter(w => w.id !== id));
+    } catch (err) {
+      console.error("Failed to delete workout", err);
+    }
+  };
 
   return (
     <div className="workouts-centered-page">

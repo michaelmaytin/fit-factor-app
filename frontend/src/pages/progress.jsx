@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './progress.css';
 
 function formatDate(str) {
@@ -15,28 +16,62 @@ export default function Progress() {
     body_fat_percentage: '',
     notes: ''
   });
+  const [editingId, setEditingId] = useState(null);
+
+  useEffect(() => {
+    axios.get('/api/progress', { withCredentials: true })
+    .then(res => setProgressEntries(res.data.data))
+    .catch(err => console.error("Failed to fetch progress", err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newEntry = {
-      ...formData,
-      id: Date.now()
-    };
-    setProgressEntries([newEntry, ...progressEntries]);
-    setFormData({
-      entry_date: '',
-      weight_lbs: '',
-      body_fat_percentage: '',
-      notes: ''
-    });
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        if (editingId) {
+        await axios.put(`/api/progress/${editingId}`, formData, { withCredentials: true });
+        const refreshed = await axios.get('/api/progress', { withCredentials: true });
+        setProgressEntries(refreshed.data.data);
+        setEditingId(null);
+        } else {
+        const res = await axios.post('/api/progress', formData, { withCredentials: true });
+        const newEntry = { ...formData, progress_id: res.data.payload.id };
+        setProgressEntries(prev => [newEntry, ...prev]);
+        }
+
+        setFormData({
+          entry_date: '',
+          weight_lbs: '',
+          body_fat_percentage: '',
+          notes: ''
+        });
+    } catch (err) {
+      console.error("Progress submission failed", err);
+    }
   };
 
-  const handleDelete = id => setProgressEntries(progressEntries.filter(entry => entry.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`/api/progress/${id}`, { withCredentials: true });
+      setProgressEntries(prev => prev.filter(entry => entry.progress_id !== id));
+    } catch (err) {
+      console.error("Progress deletion failed", err);
+    }
+  };
+
+  const handleEdit = (entry) => {
+    setEditingId(entry.progress_id);
+    setFormData({
+      entry_date: entry.entry_date || '',
+      weight_lbs: entry.weight_lbs || '',
+      body_fat_percentage: entry.body_fat_percentage || '',
+      notes: entry.notes || ''
+    });
+  };
 
   return (
     <div className="progress-centered-page">
@@ -97,17 +132,26 @@ export default function Progress() {
           <div className="progress-empty">no entries yet.</div>
         ) : (
           progressEntries.map(entry => (
-            <div className="progress-log-card" key={entry.id}>
+            <div className="progress-log-card" key={entry.progress_id}>
               <div className="progress-log-header">
                 <span className="progress-log-date">{formatDate(entry.entry_date)}</span>
-                <button
-                  className="progress-log-delete-btn"
-                  onClick={() => handleDelete(entry.id)}
-                  title="delete this progress entry"
-                  aria-label="delete progress"
-                >
-                  &#x1F5D1;
-                </button>
+                <div className="progress-log-controls">
+                  <button
+                    className="progress-log-edit-btn"
+                    onClick={() => handleEdit(entry)}
+                    title="edit entry"
+                  >
+                    &#x270E;
+                  </button>
+                  <button
+                    className="progress-log-delete-btn"
+                    onClick={() => handleDelete(entry.progress_id)}
+                    title="delete this progress entry"
+                    aria-label="delete progress"
+                  >
+                    &#x1F5D1;
+                  </button>
+                </div>
               </div>
               <div className="progress-log-fields">
                 <div><strong>weight:</strong> {entry.weight_lbs} lbs</div>
