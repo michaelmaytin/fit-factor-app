@@ -7,7 +7,7 @@ import logo from '../assets/logo.png';
 import axios from 'axios';
 
 
-function Login({ setIsLoggedIn }) {
+function Login({ setIsLoggedIn, setMe }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -36,20 +36,21 @@ function Login({ setIsLoggedIn }) {
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
-      }
-
-    try {
-        const response = await axios.post('http://localhost:5000/api/auth/login', {email, password}, {withCredentials: true} //sends cookie
-        );
-
-        alert(response.data.message);
-        setIsLoggedIn(true);
-        navigate("/dashboard");
-    } catch(err) {
-        console.error(err);
-        setErrors({form: err.response?.data?.error || "Login failed."});
     }
-};
+    setErrors({})
+    try {
+      await axios.post('/api/auth/login',
+        { email, password },
+        { withCredentials: true }
+      );
+      const meRes = await axios.get('/api/auth/me', { withCredentials: true });
+      setMe(meRes.data);
+      setIsLoggedIn(true);
+      navigate('/dashboard');
+    } catch (err) {
+      setErrors({ form: err.response?.data?.error || "Login failed." });
+    }
+  };
 
 
   return (

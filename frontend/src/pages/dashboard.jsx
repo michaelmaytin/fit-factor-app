@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './dashboard.css';
+import adminpanel from './admin';
+import trainerpanel from './trainer';
 
 // placeholder set everything N/A
 // const user = {
@@ -15,21 +17,40 @@ import './dashboard.css';
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
+    const [workouts, setWorkouts] = useState([]);
+    const [meals, setMeals] = useState([]);
+    const [progress, setProgress] = useState([]);
 
+    //load user
     useEffect(() => {
-        axios.get("http://localhost:5000/api/users/me", {withCredentials: true})
-        .then(response => {
-            setUser (response.data.data);
-        })
-        .catch(err => {
-            window.location.href = "/login";
-            console.error("failed to fetch user data", err);
-        });
+        axios.get("http://localhost:5000/api/auth/me", {withCredentials: true})    //with credentials allows JWT token to be sent via axios
+        .then(response => {setUser (response.data.data);})
+        .catch(err => { window.location.href = "/login"; console.error("failed to fetch user data", err);});
+       //if cookie is deleted or expired, user redirected to login upon app refresh or restart
+
     }, []);
 
-const workouts = [];
-const meals = [];
-const progress = [];
+    //load workouts
+    useEffect(() => {
+        axios.get("http://localhost:5000/api/workouts", {withCredentials: true})
+        .then(response => {setWorkouts (response.data.data);})
+        .catch(err => {console.error("failed to fetch workout data", err);});
+    }, []);
+
+    //load meals
+    useEffect(() => {
+        axios.get("http://localhost:5000/api/meals", {withCredentials: true})
+        .then(response => {setMeals (response.data.data);})
+        .catch(err => {console.error("failed to fetch meal data", err);});
+    }, []);
+
+    //load progress
+    useEffect(() => {
+        axios.get("http://localhost:5000/api/progress", {withCredentials: true})
+        .then(response => {setProgress (response.data.data);})
+        .catch(err => {console.error("failed to fetch progress data", err);});
+    }, []);
+
 
   return (
     <div className="dashboard-centered-page">
@@ -102,6 +123,8 @@ const progress = [];
             </ul>
           )}
         </div>
+        {user?.role === 'admin' && adminpanel()}
+        {user?.role === 'trainer' && trainerpanel()}
       </div>
     </div>
   );
