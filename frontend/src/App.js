@@ -90,7 +90,7 @@ function App() {
   const [me, setMe] = useState(null);
   useEffect(() => {
     axios
-      .get('/api/auth/me', { withCredentials: true })
+      .get('/api/auth/users/me', { withCredentials: true })
       .then(res => {
         setIsLoggedIn(true);
         setMe(res.data);

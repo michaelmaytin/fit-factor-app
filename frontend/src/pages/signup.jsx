@@ -62,7 +62,7 @@ function Signup({ setIsLoggedIn, setMe }) {
         password: formData.password
       }, { withCredentials: true });
       setIsLoggedIn(true);
-      const meRes = await axios.get('/api/auth/me', { withCredentials: true });
+      const meRes = await axios.get('/api/auth/users/me', { withCredentials: true });
       setMe(meRes.data);
       navigate('/dashboard');
     } catch (err) {
