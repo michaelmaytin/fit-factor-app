@@ -43,7 +43,7 @@ function Login({ setIsLoggedIn, setMe }) {
         { email, password },
         { withCredentials: true }
       );
-      const meRes = await axios.get('/api/auth/me', { withCredentials: true });
+      const meRes = await axios.get('/api/auth/users/me', { withCredentials: true });
       setMe(meRes.data);
       setIsLoggedIn(true);
       navigate('/dashboard');

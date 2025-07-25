@@ -110,7 +110,8 @@ def login():
     if not verify_pass(user.password, entered_password):
         return jsonify({"error": "Invalid password."}), 401
 
-    access_token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=7), additional_claims={ "role": user.role.role_name })
+    access_token = create_access_token(
+        identity=str(user.user_id), expires_delta=timedelta(days=7), additional_claims={ "role": user.role.role_name })
 
     #setting up persistent cookie for login
     response = make_response(jsonify({"message": "Login successful",}), 200)

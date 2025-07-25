@@ -23,7 +23,7 @@ export default function Dashboard() {
 
     //load user
     useEffect(() => {
-        axios.get("http://localhost:5000/api/auth/me", {withCredentials: true})    //with credentials allows JWT token to be sent via axios
+        axios.get("http://localhost:5000/api/auth/users/me", {withCredentials: true})    //with credentials allows JWT token to be sent via axios
         .then(response => {setUser (response.data.data);})
         .catch(err => { window.location.href = "/login"; console.error("failed to fetch user data", err);});
        //if cookie is deleted or expired, user redirected to login upon app refresh or restart
