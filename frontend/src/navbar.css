@@ -62,3 +62,10 @@
   color: #082c79;
   border-color: #ffffff;
 }
+
+.clock {
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap;
+}

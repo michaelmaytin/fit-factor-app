@@ -3,6 +3,9 @@ import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './navbar.css';
 import axios from 'axios';
+import Clock from './assets/Clock';
+import './assets/Clock.css';
+
 
 function AppNavbar({ setIsLoggedIn }) {
   const navigate = useNavigate();
@@ -32,9 +35,12 @@ function AppNavbar({ setIsLoggedIn }) {
             <Nav.Link as={Link} to="/progress">Progress</Nav.Link>
             <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
           </Nav>
-          <Button variant="outline-light" onClick={handleLogout}>
-            Logout
-          </Button>
+            <div className="d-flex align-items-center gap-3">
+                <Clock />
+                <Button variant="outline-light" onClick={handleLogout}>
+                Logout
+                </Button>
+            </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
