@@ -6,18 +6,17 @@ import axios from 'axios';
 import Clock from './assets/Clock';
 import './assets/Clock.css';
 
-
-function AppNavbar({ setIsLoggedIn }) {
+function AppNavbar({ setIsLoggedIn, me }) {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-      try {
-          await axios.post("http://localhost:5000/api/auth/logout",{},{ withCredentials: true });
-          setIsLoggedIn(false);
-          navigate('/');
-      } catch (err) {
-          console.error("Logout failed:", err);
-      }
+    try {
+      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+      setIsLoggedIn(false);
+      navigate('/');
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   return (
@@ -34,13 +33,18 @@ function AppNavbar({ setIsLoggedIn }) {
             <Nav.Link as={Link} to="/workouts">Workouts</Nav.Link>
             <Nav.Link as={Link} to="/progress">Progress</Nav.Link>
             <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+            
+            {/* admin link visible only to admin users */}
+            {me?.role === 'admin' && (
+              <Nav.Link as={Link} to="/admin">Admin</Nav.Link>
+            )}
           </Nav>
-            <div className="d-flex align-items-center gap-3">
-                <Clock />
-                <Button variant="outline-light" onClick={handleLogout}>
-                Logout
-                </Button>
-            </div>
+          <div className="d-flex align-items-center gap-3">
+            <Clock />
+            <Button variant="outline-light" onClick={handleLogout}>
+              Logout
+            </Button>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
