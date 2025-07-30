@@ -6,7 +6,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import axios from 'axios'
+import axios from 'axios';
 import Navbar from './navbar';
 import Login from './pages/login';
 import Signup from './pages/signup';
@@ -15,9 +15,22 @@ import Profile from './pages/profile';
 import Meals from './pages/meals';
 import Progress from './pages/progress';
 import Workouts from './pages/workouts';
+import AdminPanel from './admin';  
 
+// private route checks only if logged in
 function PrivateRoute({ children, isLoggedIn }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
+}
+
+// admin route checks login + admin role
+function AdminRoute({ children, isLoggedIn, me }) {
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!me || me.role !== 'admin') {
+    return <Navigate to="/" replace />; // redirect non-admin users to dashboard
+  }
+  return children;
 }
 
 function AppContent({ isLoggedIn, setIsLoggedIn, me, setMe }) {
@@ -79,6 +92,17 @@ function AppContent({ isLoggedIn, setIsLoggedIn, me, setMe }) {
             </PrivateRoute>
           }
         />
+
+        {/* only accessible to admins */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute isLoggedIn={isLoggedIn} me={me}>
+              <AdminPanel />
+            </AdminRoute>
+          }
+        />
+
         <Route path="*" element={<Navigate to={isLoggedIn ? "/" : "/login"} />} />
       </Routes>
     </>
@@ -86,8 +110,9 @@ function AppContent({ isLoggedIn, setIsLoggedIn, me, setMe }) {
 }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // set true for debug!
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [me, setMe] = useState(null);
+
   useEffect(() => {
     axios
       .get('/api/auth/users/me', { withCredentials: true })
@@ -100,6 +125,7 @@ function App() {
         setMe(null);
       });
   }, []);
+
   return (
     <Router>
       <AppContent
