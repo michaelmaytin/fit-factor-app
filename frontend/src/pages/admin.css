@@ -1,0 +1,138 @@
+.admin-panel {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+  margin-top: 24px;
+  padding: 24px 20px;
+}
+
+.admin-title,
+.dashboard-section-title.admin-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #255095;
+  margin-bottom: 18px;
+}
+
+.admin-form {
+  margin-bottom: 18px;
+}
+
+.admin-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.admin-form-row input,
+.admin-form-row select {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+  width: 180px;
+  margin-bottom: 4px;
+}
+
+.admin-form-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-submit-btn {
+  background: #255095;
+  color: white;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-cancel-btn {
+  background: #dde3ea;
+  color: #255095;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.admin-submit-btn:hover,
+.admin-edit-btn:hover {
+  background: #193d77;
+}
+
+.admin-error {
+  color: #e94444;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.admin-users-section {
+  margin-top: 16px;
+}
+
+.dashboard-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #364d7b;
+  margin-bottom: 8px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #222;
+}
+
+.admin-table th,
+.admin-table td {
+  border: 1px solid #dde3ea;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #f6f8fc;
+  font-weight: 700;
+}
+
+.admin-edit-btn,
+.admin-delete-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.12em;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.admin-edit-btn { color: #2d78c3; }
+.admin-edit-btn:hover { color: #0b42a4; }
+
+.admin-delete-btn { color: #e04848; }
+.admin-delete-btn:hover { color: #bc2121; }
+
+.admin-na {
+  text-align: center;
+  color: #787a8f;
+  font-style: italic;
+  padding: 12px 0;
+  background: #f9fafd;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #e7edfc;
+  cursor: pointer;
+}
+
+@media (max-width: 650px) {
+  .admin-form-row { flex-direction: column; }
+  .admin-table th, .admin-table td { font-size: 0.92em; }
+}
