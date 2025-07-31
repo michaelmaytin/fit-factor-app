@@ -11,9 +11,12 @@ when using CRUD functionality in our app, the data persists, however currently y
 
 ___
 # SEPARATION OF PARTS:
-Brooks Berry - Login, Log out< Secure cookie transfer of JWT tokens, Frontend crud/data persistence
 
-
+Team member	Primary responsibilities
+Michael Maytin	Database schema design, SQLAlchemy models, initial Docker setup.
+Nathaniel Arteaga	JWT auth flow, RBAC decorators, workout/meal/progress endpoints, README authoring.
+Dua Ali	React UI/UX, form validation, token refresh logic, Bootstrap theming.
+Brooks Berry	Trainer dashboard, charting components, integration tests (Testing-Library),Login, Log out< Secure cookie transfer of JWT tokens, Frontend crud/data persistence
 
 
 
