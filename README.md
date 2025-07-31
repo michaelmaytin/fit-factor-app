@@ -16,7 +16,7 @@ Team member	Primary responsibilities
 Michael Maytin	Database schema design, SQLAlchemy models, initial Docker setup.
 Nathaniel Arteaga	JWT auth flow, RBAC decorators, workout/meal/progress endpoints, README authoring.
 Dua Ali	React UI/UX, form validation, token refresh logic, Bootstrap theming.
-Brooks Berry	Trainer dashboard, charting components, integration tests (Testing-Library),Login, Log out< Secure cookie transfer of JWT tokens, Frontend crud/data persistence
+Brooks Berry	Trainer dashboard, charting components, integration tests (Testing-Library),Login, Log out, Secure cookie transfer of JWT tokens, Frontend crud/data persistence
 
 
 ____
@@ -30,15 +30,15 @@ React · React-DOM · React Router DOM v7 · Axios · Bootstrap 5 · React-Boots
 
 
 ___
-SET UP
-# Prerequisites
+#SET UP
+## Prerequisites
 Before setting up the project, make sure you have:
 - Python 3.12+ (for backend api)
 - Node.js 18+ (for frontend. includes `npm`) 
 - Docker + Docker Compose (database MYSQL)
 
 ___
-# For Backend
+## For Backend
 
 Make sure you have the requirements
 - pip install -r requirments.txt \
@@ -94,7 +94,7 @@ Choose one of these approaches to get your local database up and running:
    
 
 
-# Making schema changes
+## Making schema changes
 
 1. Edit `fitfactor/models.py` (add columns, tables, etc.).
 2. Run  
@@ -102,12 +102,12 @@ Choose one of these approaches to get your local database up and running:
    flask db migrate -m "change you made"
    flask db upgrade
 
-# RBAC testing and development
+## RBAC testing and development
 1. Read seed_roles.py for details
 2. Make sure db is up (docker compose up -d)
 2. Run this script in a terminal from project root
 'run_seed_roles_pstest.ps1'
 
 
-# For Front End
+## For Front End
 1. see frontend/README.md for 'npm install' and 'npm start' instructions
