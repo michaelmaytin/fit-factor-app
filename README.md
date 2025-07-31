@@ -1,15 +1,16 @@
 # Fit Factor App
-OVERVIEW:
+___
+# OVERVIEW:
 This is a fitness tracking web application created in collaboration during the summer semester at Florida State University. The collaborators involved are as follows: Michael Maytin, Nathaniel Arteaga, Dua Ali, and Brooks Berry
 
 Professor Sharanya Jayaraman will oversee this project
 
-
-DISCLAIMER FOR RUNNING THE APP:
+___
+# DISCLAIMER FOR RUNNING THE APP:
 when using CRUD functionality in our app, the data persists, however currently you must refresh and log back in to see changes
 
-
-SEPARATION OF PARTS:
+___
+# SEPARATION OF PARTS:
 Brooks Berry - Login, Log out< Secure cookie transfer of JWT tokens, Frontend crud/data persistence
 
 
