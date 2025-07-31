@@ -1,7 +1,7 @@
 # Fit Factor App
 ___
 # OVERVIEW:
-This is a fitness tracking web application created in collaboration during the summer semester at Florida State University. The collaborators involved are as follows: Michael Maytin, Nathaniel Arteaga, Dua Ali, and Brooks Berry
+This is a fitness tracking web application created in collaboration during the summer semester at Florida State University. The collaborators involved are as follows: Michael Maytin, Nathaniel Arteaga, Dua Ali, and Brooks Berry. We are trying to create an app that logs all your meals, workouts, and notes.
 
 Professor Sharanya Jayaraman will oversee this project
 
@@ -19,7 +19,13 @@ Dua Ali	React UI/UX, form validation, token refresh logic, Bootstrap theming.
 Brooks Berry	Trainer dashboard, charting components, integration tests (Testing-Library),Login, Log out< Secure cookie transfer of JWT tokens, Frontend crud/data persistence
 
 
+____
+#Libraries used
+Backend (requirements.txt)
+Flask · Flask-JWT-Extended · Flask-Login · Flask-Migrate · Flask-SQLAlchemy · SQLAlchemy · PyMySQL · python-dotenv · cryptography · alembic · cffi · blinker · click · colorama · greenlet · itsdangerous · Jinja2 · Mako · MarkupSafe · PyJWT · typing-extensions · Werkzeug
 
+Frontend (package.json)
+React · React-DOM · React Router DOM v7 · Axios · Bootstrap 5 · React-Bootstrap · Web Vitals · Testing-Library (DOM/React/Jest-DOM/User-Event)
 
 
 
