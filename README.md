@@ -13,11 +13,10 @@ ___
 # SEPARATION OF PARTS:
 
 Team member	Primary responsibilities
-Michael Maytin	Database schema design, SQLAlchemy models, initial Docker setup.
-Nathaniel Arteaga	JWT auth flow, RBAC decorators, workout/meal/progress endpoints, README authoring.
-Dua Ali	React UI/UX, form validation, token refresh logic, Bootstrap theming.
-Brooks Berry	Trainer dashboard, charting components, integration tests (Testing-Library),Login, Log out, Secure cookie transfer of JWT tokens, Frontend crud/data persistence
-
+Michael Maytin: Database schema design, SQLAlchemy models, initial Docker setup.
+Nathaniel Arteaga: JWT auth flow, RBAC decorators, workout/meal/progress endpoints, README authoring.
+Dua Ali: React UI/UX, form validation, Trainer dashboard, Bootstrap theming.
+Brooks Berry: Auth backend + frontend (login, logout), Secure cookie transfer of JWT tokens, token refresh logicFrontend crud/data persistence
 
 ____
 #Libraries used
