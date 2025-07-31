@@ -19,7 +19,7 @@ Dua Ali: React UI/UX, form validation, Trainer dashboard, Bootstrap theming.
 Brooks Berry: Auth backend + frontend (login, logout), Secure cookie transfer of JWT tokens, token refresh logicFrontend crud/data persistence
 
 ____
-#Libraries used
+# Libraries used
 Backend (requirements.txt)
 Flask · Flask-JWT-Extended · Flask-Login · Flask-Migrate · Flask-SQLAlchemy · SQLAlchemy · PyMySQL · python-dotenv · cryptography · alembic · cffi · blinker · click · colorama · greenlet · itsdangerous · Jinja2 · Mako · MarkupSafe · PyJWT · typing-extensions · Werkzeug
 
@@ -27,7 +27,7 @@ Frontend (package.json)
 React · React-DOM · React Router DOM v7 · Axios · Bootstrap 5 · React-Bootstrap · Web Vitals · Testing-Library (DOM/React/Jest-DOM/User-Event)
 
 ____
-#Other Resources
+# Other Resources
 Icons & Logo – Generated with Picsart AI Logo Generator (see frontend/README.md).
 Docker images – Official python:3.12-slim, node:18-alpine, mysql:8 on Docker Hub.
 Schema design notes – notes/database.txt (evolution history and ER diagram link).
@@ -35,7 +35,7 @@ Security playbook – notes/Security.txt documents password hashing, JWT flow, a
 Deployment cheatsheet – notes/Deployment.txt outlines Azure / AWS container guidance.
 
 ___
-#SET UP
+# SET UP
 ## Prerequisites
 Before setting up the project, make sure you have:
 - Python 3.12+ (for backend api)
