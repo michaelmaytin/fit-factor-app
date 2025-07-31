@@ -27,7 +27,13 @@ Flask · Flask-JWT-Extended · Flask-Login · Flask-Migrate · Flask-SQLAlchemy 
 Frontend (package.json)
 React · React-DOM · React Router DOM v7 · Axios · Bootstrap 5 · React-Bootstrap · Web Vitals · Testing-Library (DOM/React/Jest-DOM/User-Event)
 
-
+____
+#Other Resources
+Icons & Logo – Generated with Picsart AI Logo Generator (see frontend/README.md).
+Docker images – Official python:3.12-slim, node:18-alpine, mysql:8 on Docker Hub.
+Schema design notes – notes/database.txt (evolution history and ER diagram link).
+Security playbook – notes/Security.txt documents password hashing, JWT flow, and RBAC plan.
+Deployment cheatsheet – notes/Deployment.txt outlines Azure / AWS container guidance.
 
 ___
 #SET UP
